@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workerapp
+spec:
+  selector:
+    matchLabels:
+      app: workerapp
+  strategy:
+    type: Recreate
+  template: 
+    metadata:
+      labels:
+        app: workerapp
+    spec:
+      containers:
+      - image: neo182/workerjib
+        name: workerapp
+        env:
+        - name: GRPC_CLIENT_UPPERCASESERVER_ADDRESS
+          value: static://externalservice:9090
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql/test
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: Zoe.1Pati.2
+        - name: SPRING_RABBITMQ_HOST
+          value: rabbitmq

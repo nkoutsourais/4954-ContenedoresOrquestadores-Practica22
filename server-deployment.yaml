@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: serverapp
+spec:
+  selector:
+    app: serverapp
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serverapp
+spec:
+  selector:
+    matchLabels:
+      app: serverapp
+  strategy:
+    type: Recreate
+  template: 
+    metadata:
+      labels:
+        app: serverapp
+    spec:
+      containers:
+      - image: neo182/serverapp
+        name: serverapp
+        env:
+        - name: RABBITMQ_URL
+          value: amqp://rabbitmq
+        - name: MONGODB_URL
+          value: mongodb://dbmongo
+        ports:
+        - containerPort: 8080
